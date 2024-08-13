@@ -5,15 +5,14 @@ Rails.application.routes.draw do
     get 'dashboards', to:'dashboards#index'
     resource :users, only: [:destroy]
   end
-  devise_for :users
-  root to: "homes#top"
-
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  get "homes/about" => "homes#about", as: 'about'
-
-  resources :post_images, only: [:new, :create, :index, :show, :destroy] do
-   resource :favorite, only: [:create, :destroy]
+  scope module: :public do
+   devise_for :users
+   root to: "homes#top"
+   get "homes/about" => "homes#about", as: 'about'
+   resources :post_images, only: [:new, :create, :index, :show, :destroy] do
+    resource :favorite, only: [:create, :destroy]
    resources :post_comments, only: [:create, :destroy]
+   end
+   resources :users, only: [:show, :edit, :update]
   end
-  resources :users, only: [:show, :edit, :update]
 end
